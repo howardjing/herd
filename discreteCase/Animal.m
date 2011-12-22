@@ -27,14 +27,14 @@ classdef Animal < handle
             lowerBound = 0;
             upperBound = 10;
             maxVelocity = 2;
-            maxDirection = 1;
+            maxDirection = 2*pi;
             
             this.x = random('unif', lowerBound, upperBound);
             this.y = random('unif', lowerBound, upperBound);
             
             this.repulsionRadius = 0;
             this.neutralRadius = 0;
-            this.attractionRadius = 3;
+            this.attractionRadius = 10;
             
             this.direction = random('unif', lowerBound, maxDirection);
             this.velocity = random('unif', lowerBound, maxVelocity);
@@ -42,7 +42,7 @@ classdef Animal < handle
             this.biasedDirection = this.direction;
             this.biasedVelocity = this.velocity;
             
-            this.timeStep = 0.5;
+            this.timeStep = 0.2;
         end
         
         
@@ -57,6 +57,7 @@ classdef Animal < handle
         function update(this, potentialNeighbors)
             neighbors = this.findNeighbors(potentialNeighbors);
             this.findNewDirectionAndVelocity(neighbors)
+            % not sure what cos and sine adds yet
             this.x = this.x + this.velocity*(cos(this.direction))*this.timeStep;
             this.y = this.y + this.velocity*(sin(this.direction))*this.timeStep;
         end
@@ -81,12 +82,25 @@ classdef Animal < handle
         function findNewDirectionAndVelocity(this, neighbors)
             directionSum = 0;
             velocitySum = 0;
-            for i=1:length(neighbors)
-               directionSum = directionSum + neighbors(i).direction;
-               velocitySum = velocitySum + neighbors(i).velocity;
+            
+            % if only neighbor is itself
+            if length(neighbors) == 1
+                this.direction = this.biasedDirection;
+                this.velocity = this.biasedVelocity;
+            else
+                % otherwise take average of negihbors
+                for i=1:length(neighbors)
+                    directionSum = directionSum + neighbors(i).direction;
+                    velocitySum = velocitySum + neighbors(i).velocity;
+                end
+                this.direction = directionSum/length(neighbors);
+                this.velocity = velocitySum/length(neighbors);
             end
-            this.direction = directionSum/length(neighbors);
-            this.velocity = velocitySum/length(neighbors);
+            
+            % add random perturbation
+            this.direction = this.direction + random('unif',0,0.05);
+            this.velocity = this.velocity + random('unif',0,0.2);
+            
         end
     end
 end
