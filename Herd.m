@@ -2,7 +2,7 @@ classdef Herd < handle
     % a herd of animals (extends handle so everything is pass by reference I think)
     properties
         maxPop % how many animals in the herd
-        animal % a vector of animals
+        animals % a vector of animals
         
         averageDirection
         averageVelocity
@@ -13,9 +13,9 @@ classdef Herd < handle
         % constructor
         function this = Herd(maxPop)
             this.maxPop = maxPop;
-            this.animal = Animal;
+            this.animals = Animal;
             for i=1:maxPop
-                this.animal(i) = Animal;
+                this.animals(i) = Animal;
             end
             
             this.findAverageDirection;
@@ -27,15 +27,21 @@ classdef Herd < handle
             x = zeros(1, this.maxPop);
             y = zeros(1, this.maxPop);
             for i=1:this.maxPop
-                x(i) = this.animal(i).x;
-                y(i) = this.animal(i).y;
+                x(i) = this.animals(i).x;
+                y(i) = this.animals(i).y;
             end
             scatter(x,y);
         end
         
+        function updateRandom(this)
+            for i=1:this.maxPop
+                this.animals(i).updateRandom
+            end
+        end
+        
         function update(this)
             for i=1:this.maxPop
-                this.animal(i).update
+                this.animals(i).update(this.animals);
             end
         end
         
@@ -44,11 +50,12 @@ classdef Herd < handle
     % private helper methods
     methods (Access = private)
         
+        % don't think the rest is necessary
         function findAverageDirection(this)
             % loop through all the animals, calculate the average
             sum = 0;
             for i=1:this.maxPop
-                sum = sum + this.animal(i).direction;
+                sum = sum + this.animals(i).direction;
             end
             this.averageDirection = sum/this.maxPop;
         end
@@ -56,9 +63,10 @@ classdef Herd < handle
         function findAverageVelocity(this)
             sum = 0;
             for i=1:this.maxPop
-                sum = sum + this.animal(i).velocity;
+                sum = sum + this.animals(i).velocity;
             end
             this.averageVelocity = sum/this.maxPop;
         end
+        
     end
 end
