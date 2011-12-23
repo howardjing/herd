@@ -11,4 +11,6 @@ function [domVal domVec] = powerIteration(A, appx)
     end
     domVec = appx;
     domVal = appx'*A*appx;
+    counter
+    error
 end
