@@ -3,5 +3,5 @@ function domVal = singlePass(A, k)
     Y = A*Omega;
     [Q garbage] = qr(Y);
     B = (Q'*Y)/(Q'*Omega);
-    domVal = svd(B);
+    domVal = max(eig(B));
 end

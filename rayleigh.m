@@ -1,5 +1,5 @@
-function [domLam eigenVec] = rayleigh (A, approx)
-
+function [domLam eigenVec] = rayleigh (A)
+    approx = ones(length(A),1);
     counter = 0;
     epsilon = 0.0001;
     error = 100;
@@ -17,8 +17,6 @@ function [domLam eigenVec] = rayleigh (A, approx)
 
     eigenVec = approx;
     domLam = approx'*A*approx; 
-    counter
-    error
 
 end
 

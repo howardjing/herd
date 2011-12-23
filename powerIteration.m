@@ -1,5 +1,5 @@
-function [domVal domVec] = powerIteration(A, appx)
-
+function [domVal domVec counter] = powerIteration(A)
+    appx = ones(length(A),1);
     counter = 0;
     epsilon = 0.001;
     error = 100;
@@ -11,6 +11,4 @@ function [domVal domVec] = powerIteration(A, appx)
     end
     domVec = appx;
     domVal = appx'*A*appx;
-    counter
-    error
 end

@@ -4,7 +4,10 @@ answerMatrix = zeros(3,20);
 counter = 1;
 for i=100:100:2000 
     
+    % Generate a random hermitian matrix
     A = randn(i,i);
+    A = (A + A')/2;
+    
     timeStart = tic;
     disp('svd')
     temp = svd(A);

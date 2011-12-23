@@ -1,10 +1,9 @@
-function [domVal domVec] = inverseIteration(A)
+function [domVal domVec counter] = inverseIteration(A)
 
-    counter = 0;
     epsilon = 0.001;
     numTimes = 10000;
     % call power iteration until convergence is around 0.1
-    [appxVal appxVec error] = power(A,0.1);
+    [appxVal appxVec error counter] = power(A,0.1);
     while (counter < numTimes) && (error > epsilon)
         temp = appxVec;
         C = (A-appxVal*eye(size(A)))\appxVec;
@@ -18,7 +17,7 @@ function [domVal domVec] = inverseIteration(A)
     
 end
 
-function [domVal domVec error] = power(A, tolerance)
+function [domVal domVec error counter] = power(A, tolerance)
     appx = ones(length(A),1);
     counter = 0;
     numTimes = 10000;
