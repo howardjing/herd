@@ -1,16 +1,16 @@
-function [domLam eigenVec] = rayleigh (A)
-    approx = ones(length(A),1);
-    counter = 0;
-    epsilon = 0.0001;
-    error = 100;
+function [domLam eigenVec counter] = rayleigh(A, numTimes)
 
-    while (counter < 10000) && (error > epsilon)
+    epsilon = 0.001;
+
+    % call power iteration until convergence is around 1 
+    % then the approximation is good enough to start rayleigh iteration
+    
+    [domLam approx error counter] = power(A,1,numTimes);
+    while (counter < numTimes) && (error > epsilon)
         temp = approx;
         rq = (temp'*A*temp)/(temp'*temp);
-
-        approx = inv((A-rq*eye(size(A))))*approx...
-            /norm(inv((A-rq*eye(size(A))))*approx);
-
+        C = (A-rq*eye(size(A)))\approx;
+        approx = C/norm(C,2);
         error = norm(temp - approx,2);
         counter = counter + 1;
     end
@@ -19,6 +19,23 @@ function [domLam eigenVec] = rayleigh (A)
     domLam = approx'*A*approx; 
 
 end
+
+function [domLam eigenVec error counter] = power(A,tolerance, numTimes)
+    appx = ones(length(A),1);
+    counter = 0;
+    epsilon = tolerance;
+    error = 100;
+    while (counter < numTimes) && (error > epsilon)
+        temp = appx;
+        appx = A*appx/ norm(A*appx,2);
+        error = norm(temp-appx,2);
+        counter = counter + 1;
+    end
+    eigenVec = appx;
+    domLam = appx'*A*appx;
+end
+
+    
 
     
     
