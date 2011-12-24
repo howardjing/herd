@@ -25,6 +25,7 @@ public class SparseMatrixGenerator {
     }
     
     // prints the sparse matrix in CSV format
+    // ugh string concatenation sucks
     public String toString() {
         String s = "";
         for (int i=0; i<matrix.length; i++) {
@@ -44,7 +45,15 @@ public class SparseMatrixGenerator {
             int dimension = Integer.parseInt(args[0]);
             double prob = Double.parseDouble(args[1]);
             SparseMatrixGenerator me = new SparseMatrixGenerator(dimension, prob);
-            System.out.println(me);
+            
+            for (int i=0; i<me.matrix.length; i++) {
+                String s = "";
+                for (int j=0; j<me.matrix[i].length; j++) {
+                    s = s + me.matrix[i][j] + ",";
+                } 
+                System.out.println(s.substring(0,s.length()-1));
+            }
+            
         }
         
     }
