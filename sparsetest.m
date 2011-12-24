@@ -12,7 +12,17 @@ for i=100:100:2000
     
    
     % Generate a random hermitian matrix
-    A = randn(i,i);
+    % A = randn(i,i);
+    % A = (A + A')/2;
+    
+    % import matrix
+    name = 'sparse';
+    number = int2str(counter);
+    ext = '.csv';
+    filepath = ['data/' name number ext];
+    A = csvread(filepath);
+    
+    % make it sparse
     A = (A + A')/2;
     
     % find the dominant, and second most dominant eigenvalue
