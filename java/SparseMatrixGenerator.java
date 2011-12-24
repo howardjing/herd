@@ -37,8 +37,15 @@ public class SparseMatrixGenerator {
     }
     
     public static void main(String[] args) {
-        SparseMatrixGenerator me = new SparseMatrixGenerator(100,0.5);
-        System.out.println(me);
+        if (args.length != 2) {
+            System.out.println("usage: java SparseMatrixGenerator [matrix dimension] [probability of being one]\n ie java SparseMatrixGenerator 100 0.05");
+        }
+        else {
+            int dimension = Integer.parseInt(args[0]);
+            double prob = Double.parseDouble(args[1]);
+            SparseMatrixGenerator me = new SparseMatrixGenerator(dimension, prob);
+            System.out.println(me);
+        }
         
     }
 }

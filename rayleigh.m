@@ -1,11 +1,11 @@
 function [domLam eigenVec counter] = rayleigh(A, numTimes)
 
     epsilon = 0.001;
-
+    counter = 0;
     % call power iteration until convergence is around 1 
     % then the approximation is good enough to start rayleigh iteration
     
-    [domLam approx error counter] = power(A,1,numTimes);
+    [domLam approx error] = power(A,1,numTimes);
     while (counter < numTimes) && (error > epsilon)
         temp = approx;
         rq = (temp'*A*temp)/(temp'*temp);

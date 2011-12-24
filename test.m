@@ -2,15 +2,23 @@
 timeMatrix = zeros(5,20);
 answerMatrix = zeros(5,20);
 counterMatrix = zeros(5,20);
-numTimes = 10000;
+numTimes = 5000;
 counter = 1;
+
+eigenValues = zeros(2,20);
 for i=100:100:2000 
     disp('Working on')
     i
     
+   
     % Generate a random hermitian matrix
     A = randn(i,i);
     A = (A + A')/2;
+    
+    % find the dominant, and second most dominant eigenvalue
+    temp = eig(A);
+    eigenValues(1,counter) = temp(length(temp));
+    eigenValues(2,counter) = temp(length(temp)-1);
     
     % Matlab's eig function
     timeStart = tic;
@@ -48,15 +56,15 @@ end
 
 
 % Graphing time and number of iterations
-plot(1:20, timeMatrix(1,:))
+plot(100:100:2000, timeMatrix(1,:))
 hold on
-plot(1:20, timeMatrix(2,:), 'r')
+plot(100:100:2000, timeMatrix(2,:), 'r')
 hold on
-plot(1:20, timeMatrix(3,:), 'g')
+plot(100:100:2000, timeMatrix(3,:), 'g')
 hold on
-plot(1:20, timeMatrix(4,:), 'm')
+plot(100:100:2000, timeMatrix(4,:), 'm')
 hold on
-plot(1:20, timeMatrix(5,:), 'k')
+plot(100:100:2000, timeMatrix(5,:), 'k')
 title ('Time Elapsed till Convergence')
 xlabel('Matrix Size x by x')
 ylabel('Time')
@@ -64,13 +72,13 @@ legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration'
 
 
 figure
-scatter(1:20, counterMatrix(2,:), 'r')
+plot(100:100:2000, counterMatrix(2,:), 'r')
 hold on
-scatter(1:20, counterMatrix(3,:), 'g')
+plot(100:100:2000, counterMatrix(3,:), 'g')
 hold on
-scatter(1:20, counterMatrix(4,:), 'm')
+plot(100:100:2000, counterMatrix(4,:), 'm')
 hold on
-scatter(1:20, counterMatrix(5,:), 'k')
+plot(100:100:2000, counterMatrix(5,:), 'k')
 title ('Number of Iterations till Convergence')
 xlabel ('Matrix Size x by x')
 ylabel ('Time')
