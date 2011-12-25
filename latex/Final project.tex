@@ -1,0 +1,119 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Scientific Computing Final Project}
+\author{Howard Jing, Sun Hyoung Sonya Kim}
+\date{December 25, 2011}                                           % Activate to display a given date or no date
+
+\begin{document}
+\begin{abstract}
+This project discusses an algorithm called Single-Pass Algorithm which has the advantage of only requiring one access to a given matrix A. This is useful when computing very large matrices where the cost of accessing the matrix is high. For instance, if a matrix is too large to be stored in RAM, it must be accessed from other sources, such as the hard drive. Since hard drive access times are hundreds of times slower than ram, it is convenient to develop a method which only needs to access the given matrix once in order to process information about the matrix. Applications of Single-Pass algorithm include PageRank, which computes the dominant eigenvalue of a sparse matrix. This sparse matrix contains discrete probabilities that assigns the level of "importance" to the webpages. We compare and contrast various methods of solving the dominant eigenvalue problem and test the efficiency and accuracy of Single-Pass algorithm. 
+
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+Much of scientific computing is concerned with constructing and implementing algorithms to solve mathematical problems. From it arises the topic of speed and efficiency; as seen throughout the course, there exists a variety of methods with varying degrees of efficiency that are used to solve the same problem. For example, with iterative methods, we are concerned about operation count per iteration and how fast the algorithm converges. However, when evaluating the total efficiency of an algorithm, we must look at time complexity as well as space complexity. The consideration of storage locations of data and the conscious effort to optimize the time taken to access the data from its storage location can certainly ameliorate the quality of the algorithm. 
+
+Consider the problem of computing the dominant eigenvalue of a large matrix. Many times, the given matrix is small enough to fit into RAM, so the cost of accessing this matrix is very low. However, when dealing with a large matrix that needs to be stored in the hard drive, the cost of accessing the matrix to proceed with necessary computations will be very high. Therefore, this motivates us to find a modified algorithm which minimizes the number of times the algorithm passes over the given matrix in order to perform eigenvalue approximation. 
+
+In section 2, we introduce and elaborate on the traditional methods known for computing the largest eigenvalue of a given matrix. Then in section 3, we discuss a probabilistic algorithm called a Single-Pass Algorithm which takes space complexity into consideration and carries out the calculations with just a single pass over the data. In section 4, we test out the algorithms and determine the relative efficiency of each of the methods. Lastly, in section 5, we simulate a real life application of the single-pass algorithm on a sparse matrix, motivated by the Google's link analysis algorithm, PageRank. 
+
+\section{Classical Algorithms for Dominant Eigenvalue Problem}
+Many iterative algorithms for solving the dominant eigenvalue problem are known. Among the most popular are power iteration, inverse iteration, and Raleigh quotient iteration. 
+
+\subsection{Power Iteration}
+
+The power iteration algorithm is a method of computing the dominant eigenvalue of a matrix $A$ $\in \mathbb{C}^{n \times n}$. Assuming that $A$ has n distinct eigenvalues, it can be factorized in the form of $A = V \Lambda V^{-1}$, where $\Lambda$ is a diagonal matrix with eigenvalues $\lambda_1 ,..., \lambda_n$. Furthermore, assume that the eigenvalues are ordered from largest to smallest, $|\lambda_1| > |\lambda_2| > ... > |\lambda_n|$, meaning that $\lambda_1$ is the largest eigenvalue, while $\lambda_n$ is the smallest eigenvalue.
+
+Note that: 
+\begin{align*}
+	&A = V\Lambda V^{-1} \\
+	\implies &A^k = (V\Lambda V^{-1})(V\Lambda V^{-1})...(V\Lambda V^{-1}) = V\Lambda ^k V^{-1} \\	
+	\implies &A^kV = V\Lambda ^k
+\end{align*}
+Suppose we have a vector $x = V \hat{x} $ $\in$ $\mathbb{C}^{n \times n}$, then because $\Lambda$ is a diagonal matrix, we have that:
+\begin{align*}
+	A^kx &= A^kV\hat{x} \\
+	& = (V\Lambda ^k)\hat{x}  \\
+	& = \Sigma^{n}_{i=1} v_i \lambda_i \hat{x}_i \\
+\end{align*}
+Pulling out the dominant eigenvalue $\lambda_1^k$, we have that:
+\begin{align*}
+	A^kx = \lambda_1^k(\sum_{i=1}^n v_i \frac{\lambda_i}{\lambda_1}^k \hat{x}_i)
+\end{align*}
+and since for $i > 1$ we know that $|\frac{\lambda_i}{\lambda_1}| < 1$, we see that $(\frac{\lambda_i}{\lambda_1})^k \rightarrow 0$ as $k$ grows large.
+This implies that as $k$ grows large, 
+\[ 
+	A^k x \approx \lambda_1^k v_1 \hat{x}_1
+\]
+which implies the power iteration algorithm,
+\[
+	x_{k+1} = \frac{Ax_k}{||Ax_k||}
+\]
+since
+\[
+	\frac{Ax_k}{||Ax_k||} = \frac{A^kx_0}{||A^kx_0||}
+\]
+This can be seen by induction.
+The base case is true by definition:
+\[
+	x_2 = \frac{Ax_0}{||Ax_0||} = \frac{A^1x_0}{||A^1x_0||}
+\]
+The induction hypothesis is then:
+\[
+	x_{k+1} = \frac{Ax_k}{||Ax_k||} = \frac{A^kx_0}{||A^kx_0||}
+\]
+Then by applying the algorithm, we get that:
+\begin{align*}
+	x_{k+2} = \frac{Ax_{k+1}}{||Ax_{k+1}||} &= \frac{A(\frac{A^kx_0}{||A^kx_0||})}{||A(\frac{A^kx_0}{||A^kx_0||})||}\\
+	&= \frac{1}{||A^kx_0||}A^{k+1}x_0(||A^{k+1}x_0||\frac{1}{||A^kx_0||})^{-1} \\
+	&=\frac{A^{k+1}x_0}{||A^{k+1}x_0||}
+\end{align*}
+So the formula is proved. As k increases, the algorithm will converge towards the eigenvector associated with the matrix $A$'s dominant eigenvalue. Note that if $\frac{\lambda_i}{\lambda_1}$ is near one, then the algorithm will converge very slowly. However, if $\lambda_1$ is much larger than the rest of the eigenvalues, then the algorithm will converge at a reasonable rate. 
+
+\subsection{Inverse Iteration}
+If an invertible $n\times n$ matrix A has eigenvalues $\lambda_1,...,\lambda_n$ , then its inverse $A^{-1}$ has eigenvalues $\frac{1}{\lambda_1}$,..,$\frac{1}{\lambda_n}$. If we run the power iteration algorithm on the matrix $A^{-1}$, we can then find the smallest eigenvalue $\lambda_n$ of the matrix A. This process can in fact be generalized to find any eigenvalue of the matrix A.
+
+The spectral mapping theorem states that for every $n\times n$ matrix A and every polynomial $p(x)$, if A has an eigenvalue $\lambda_i$, then $p(A)$ has an eigenvalue $p(\lambda_i)$. Then the matrix $B := A - \sigma I$ has eigenvalues of $\{\lambda_1 - \sigma,...,\lambda_n - \sigma\}$. If $\sigma$ is chosen to be very close to the arbitrary eigenvalue $\lambda_i$, then the corresponding eigenvalue $\lambda_i - \sigma$ will be the smallest eigenvalue of the matrix $B$.
+
+By applying the power iteration algorithm on the matrix $B^{-1}$, we thus arrive at the inverse iteration algorithm: 
+\[
+	x_{k+1} = \frac{(A-\sigma I)^{-1}x_k}{||(A-\sigma I)^{-1}x_k||}
+\]
+which converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\sigma$. Unlike the power iteration algorithm, which only computes the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm is more flexible as it can be used to compute an arbitrary eigenvalue of the matrix $A$.
+
+However the inverse iteration method is more costly than the power iteration method. This is because at each iteration step, either a system of linear equations must be solved, or the inverse matrix must be calculated. This implies that each step of the inverse iteration algorithm costs $O(n^3)$ operations. Similar to the power iteration algorithm, the matrix A must be accessed once at each iteration, for a total of of n times. 
+
+
+
+\subsection{Rayleigh Quotient Iteration (RQI)}
+The Rayleigh quotient iteration method is similar to the inverse iteration method in that it uses improved eigenvector estimates at each iteration to find a good eigenvalue estimate. At each iteration, the Rayleigh quotient is computed to  yield a better eigenvalue estimate at the next step. We calculate the next eigenvector approximation $b_{i+1}$ by :
+\[
+b_{i+1} = \frac{(A-\mu_{i}I)^{-1}b_i}{||(A-\mu_{i}I)^{-1}b_{i}||}
+\]
+where A is the given matrix, I is the identity matrix and Rayleigh quotient $\mu$ is defined as
+\[
+\mu_i = \frac{b^\ast_iAb_i}{b^\ast_ib_i}
+\]
+The convergence of this algorithm known to be cubic. However the initial guess of the eigenvector is very important and hence needs some guidance in order to converge to a global dominant eigenvalue. An inexact Rayleigh quotient iterations caused by an inaccurate initial estimate of the eigenvector associated with the dominant eigenvalue may result in slow or even inaccurate convergence. Thus in our implementation of the algorithm, we kick off the Rayleigh quotient iteration method by the power iteration method then switch to Rayleigh once the eigenvector approximation is guided in the right direction. 
+
+
+
+\section{Single-Pass Algorithm}
+\section{Results and Discussion}
+\section{Applications and Example}
+
+%\subsection{}
+
+
+
+\end{document}  
