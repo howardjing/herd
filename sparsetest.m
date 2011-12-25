@@ -25,6 +25,9 @@ for i=100:100:2000
     % make it sparse
     A = (A + A')/2;
     
+    % find rank
+    rank(A)
+    
     % find the dominant, and second most dominant eigenvalue
     temp = eig(A);
     eigenValues(1,counter) = temp(length(temp));

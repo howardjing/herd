@@ -7,6 +7,9 @@ public class SparseMatrixGenerator {
     
     // given a number of pages n, 
     // return a sparse matrix listing the links of each page
+    public SparseMatrixGenerator() {
+        
+    }
     public SparseMatrixGenerator(int n, double prob) {
         
         matrix = new int[n][n];
