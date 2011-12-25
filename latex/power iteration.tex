@@ -63,9 +63,22 @@ Then by applying the algorithm, we get that:
 	&= \frac{1}{||A^kx_0||}A^{k+1}x_0(||A^{k+1}x_0||\frac{1}{||A^kx_0||})^{-1} \\
 	&=\frac{A^{k+1}x_0}{||A^{k+1}x_0||}
 \end{align*}
-So the formula is proved. As k increases, the algorithm will converge towards the eigenvector associated with the matrix $A$'s dominant eigenvalue. Note that if $\frac{\lambda_i}{\lambda_1}$ is near one, then the algorithm will converge very slowly. However, if $\lambda_1$ is much larger than the rest of the eigenvalues, then the algorithm will converge at a reasonable rate. 
+So the formula is proved. 
+
+As k increases, the algorithm will converge towards the eigenvector associated with the matrix $A$'s dominant eigenvalue. Note that if $\frac{\lambda_i}{\lambda_1}$ is near one, then the algorithm will converge very slowly. However, if $\lambda_1$ is much larger than the rest of the eigenvalues, then the algorithm will converge at a reasonable rate. 
+
+At each iteration step of the power iteration algorithm,  a matrix-vector multiplication is carried out, which implies an operation count of $O(n^2)$ operations. Moreover, the matrix A must be accessed once at each iteration, for a total of n times.
 
 \section*{Inverse Iteration}
-If we run the power iteration algorithm, not on the matrix $A$, but on the matrix $|A-\sigma I|^{-1}$, we arrive at the inverse iteration algorithm. While the power iteration algorithm converges to the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\sigma$.
+If an invertible $n\times n$ matrix A has eigenvalues $\lambda_1,...,\lambda_n$ , then its inverse $A^{-1}$ has eigenvalues $\frac{1}{\lambda_1}$,..,$\frac{1}{\lambda_n}$. If we run the power iteration algorithm on the matrix $A^{-1}$, we can then find the smallest eigenvalue $\lambda_n$ of the matrix A. This process can in fact be generalized to find any eigenvalue of the matrix A.
 
+The spectral mapping theorem states that for every $n\times n$ matrix A and every polynomial $p(x)$, if A has an eigenvalue $\lambda_i$, then $p(A)$ has an eigenvalue $p(\lambda_i)$. Then the matrix $B := A - \sigma I$ has eigenvalues of $\{\lambda_1 - \sigma,...,\lambda_n - \sigma\}$. If $\sigma$ is chosen to be very close to the arbitrary eigenvalue $\lambda_i$, then the corresponding eigenvalue $\lambda_i - \sigma$ will be the smallest eigenvalue of the matrix $B$.
+
+By applying the power iteration algorithm on the matrix $B^{-1}$, we thus arrive at the inverse iteration algorithm: 
+\[
+	x_{k+1} = \frac{(A-\sigma I)^{-1}x_k}{||(A-\sigma I)^{-1}x_k||}
+\]
+which converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\sigma$. Unlike the power iteration algorithm, which only computes the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm is more flexible as it can be used to compute an arbitrary eigenvalue of the matrix $A$.
+
+However the inverse iteration method is more costly than the power iteration method. This is because at each iteration step, either a system of linear equations must be solved, or the inverse matrix must be calculated. This implies that each step of the inverse iteration algorithm costs $O(n^3)$ operations. Similar to the power iteration algorithm, the matrix A must be accessed once at each iteration, for a total of of n times. 
 \end{document}  
