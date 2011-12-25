@@ -1,0 +1,71 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Scientific Computing Final Project}
+\author{Howard Jing and Sun Hyoung Sonya Kim}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\section*{Power Iteration}
+The power iteration algorithm is a method of computing the dominant eigenvalue of a matrix $A$ $\in \mathbb{C}^{n \times n}$. Assuming that $A$ has n distinct eigenvalues, it can be factorized in the form of $A = V \Lambda V^{-1}$, where $\Lambda$ is a diagonal matrix with eigenvalues $\lambda_1 ,..., \lambda_n$. Furthermore, assume that the eigenvalues are ordered from largest to smallest, $|\lambda_1| > |\lambda_2| > ... > |\lambda_n|$, meaning that $\lambda_1$ is the largest eigenvalue, while $\lambda_n$ is the smallest eigenvalue.
+
+Note that: 
+\begin{align*}
+	&A = V\Lambda V^{-1} \\
+	\implies &A^k = (V\Lambda V^{-1})(V\Lambda V^{-1})...(V\Lambda V^{-1}) = V\Lambda ^k V^{-1} \\	
+	\implies &A^kV = V\Lambda ^k
+\end{align*}
+Suppose we have a vector $x = V \hat{x} $ $\in$ $\mathbb{C}^{n \times n}$, then because $\Lambda$ is a diagonal matrix, we have that:
+\begin{align*}
+	A^kx &= A^kV\hat{x} \\
+	& = (V\Lambda ^k)\hat{x}  \\
+	& = \Sigma^{n}_{i=1} v_i \lambda_i \hat{x}_i \\
+\end{align*}
+Pulling out the dominant eigenvalue $\lambda_1^k$, we have that:
+\begin{align*}
+	A^kx = \lambda_1^k(\sum_{i=1}^n v_i \frac{\lambda_i}{\lambda_1}^k \hat{x}_i)
+\end{align*}
+and since for $i > 1$ we know that $|\frac{\lambda_i}{\lambda_1}| < 1$, we see that $(\frac{\lambda_i}{\lambda_1})^k \rightarrow 0$ as $k$ grows large.
+
+This implies that as $k$ grows large, 
+\[ 
+	A^k x \approx \lambda_1^k v_1 \hat{x}_1
+\]
+which implies the power iteration algorithm,
+\[
+	x_{k+1} = \frac{Ax_k}{||Ax_k||}
+\]
+since
+\[
+	\frac{Ax_k}{||Ax_k||} = \frac{A^kx_0}{||A^kx_0||}
+\]
+This can be seen by induction.
+
+The base case is true by definition:
+\[
+	x_2 = \frac{Ax_0}{||Ax_0||} = \frac{A^1x_0}{||A^1x_0||}
+\]
+The induction hypothesis is then:
+\[
+	x_{k+1} = \frac{Ax_k}{||Ax_k||} = \frac{A^kx_0}{||A^kx_0||}
+\]
+Then by applying the algorithm, we get that:
+\begin{align*}
+	x_{k+2} = \frac{Ax_{k+1}}{||Ax_{k+1}||} &= \frac{A(\frac{A^kx_0}{||A^kx_0||})}{||A(\frac{A^kx_0}{||A^kx_0||})||}\\
+	&= \frac{1}{||A^kx_0||}A^{k+1}x_0(||A^{k+1}x_0||\frac{1}{||A^kx_0||})^{-1} \\
+	&=\frac{A^{k+1}x_0}{||A^{k+1}x_0||}
+\end{align*}
+So the formula is proved. As k increases, the algorithm will converge towards the eigenvector associated with the matrix $A$'s dominant eigenvalue. Note that if $\frac{\lambda_i}{\lambda_1}$ is near one, then the algorithm will converge very slowly. However, if $\lambda_1$ is much larger than the rest of the eigenvalues, then the algorithm will converge at a reasonable rate. 
+
+\section*{Inverse Iteration}
+If we run the power iteration algorithm, not on the matrix $A$, but on the matrix $|A-\sigma I|^{-1}$, we arrive at the inverse iteration algorithm. While the power iteration algorithm converges to the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\sigma$.
+
+\end{document}  

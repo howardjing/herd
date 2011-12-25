@@ -2,3 +2,7 @@
 *.m~
 *.pdf
 *.class
+*.log
+*.aux
+*.pdf
+*.gz
