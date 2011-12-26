@@ -112,34 +112,49 @@ The convergence of this algorithm known to be cubic. However the initial guess o
 \section{Single-Pass Algorithm}
 \section{Results and Discussion}
 
-\subsection{Random Normal Hermetian Matrix}
-Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on normally distributed hermetian matrices.
+This section will compare the speed of running MATLAB's default eig function against the power iteration, rayleigh iteration, and single pass algorithms on various types of square matrices, ranging from $100 \times 100$ to $ 2000 \times 2000$, in increments of 100. Additionally, the ratio between the largest and second largest eigenvalues of the matrices are plotted to give an idea of the convergence of the power iteration based algorithms. The single pass algorithm samples all n rows of the matrix. In the following section, we will vary the amount of rows sampled in order to examine the tradeoff between accuracy and speed. 
+
+The results of the inverse iteration algorithm were not included because it was outperformed by the rayleigh iteration algorithm. Moreover, in order for it to converge to the desired eigenvalue, the eigenvalue approximation must already be quite close to the correct answer.
+
+\subsection{} \textbf{Random Normal Hermetian Matrix.}
 
 \epsfig{file=../graph/randn/"time elapsed alt".eps}
 
+The above graph shows the results of running the power iteration, rayleigh iteration, and single pass algorithm on normally distributed hermetian matrices. The default eigenvalue solver in matlab gave the fastest results, which was to be expected as the difference between the largest eigenvalue and second largest eigenvalue was very small. On the other hand, the power iteration, rayleigh iteration, and single pass algorithms were all very erratic. In the normally distributed case, with eigenvalues that are clustered closely together, the power iteration based algorithms are not a very good choice.
+
 \epsfig{file=../graph/randn/eigenvalues.eps}
 
-\subsection{Random Uniform Hermetian Matrix}
-Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on uniformly distributed hermetian matrices.
+As can be seen, the largest eigenvalue and second largest eigenvalue are very similar in size. This explains the slow convergence of the power iteration algorithm.
+
+\subsection{} \textbf{Random Uniform Hermetian Matrix.}
 
 \epsfig{file=../graph/rand/"time elapsed alt".eps}
 
+The above graph shows the results of running the power iteration, rayleigh iteration, and single pass algorithm on uniformly distributed hermetian matrices. Unlike the normally distributed matrices, the dominant eigenvalue is much larger than the second largest eigenvalue. As a result, the power iteration algorithm converges much faster compared to the normal case. Similarly, Rayleigh iteration is comparable to the default eigenvalue solver. However, the single pass algorithm is still the slowest of the algorithms.
+
 \epsfig{file=../graph/rand/eigenvalues.eps}
 
-\subsection{Sparse Hermetian Matrix}
-Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on sparse hermetian matrices, with a $10\%$ chance of containing a non-zero value.
+As can be seen, the difference between the two eigenvalues are very large. As a result, the power iteration algorithm converges quickly.
+
+\subsection{} \textbf{Sparse Hermetian Matrix.}
 
 \epsfig{file=../graph/hermetiansparse/"time elapsed alt".eps}
 
+The above graphs shows the results of running the power iteration, rayleigh iteration, and single pass algorithm on sparse hermetian matrices, with a $90\%$ chance of containing zero, and a $10\%$ chance of containing one. This type of matrix can be used to represent an undirected graph. If there is a one at index $(i,j)$, then there is a connection between the $ith$ and $jth$ position vertices of a graph. As can be seen, the results are very similar to the uniformly distributed case, with the exception that the rayleigh iteration method is slightly slower than in the uniform case.
+
 \epsfig{file=../graph/hermetiansparse/eigenvalues.eps}
 
-\subsection{Sparse Matrix}
-Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on sparse matrices, with a $5\%$ chance of containing a non-zero value.
+Again, there is a wide gap between the largest and second largest eigenvalues in the matrices.
+
+\subsection{} \textbf{Sparse Non Hermetian Matrix.}
 
 \epsfig{file=../graph/nonhermetiansparse/"time elapsed alt".eps}
 
+The above shows the results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on sparse matrices, with a $5\%$ chance of containing a one, and a $95\%$ chance of containing a zero. This type of matrix can be used to represent a directed graph, with a one representing a one-way connection between the $ith$ and $jth$ position vertices of a graph. The results are again similar to the uniform distribution, although the default MATLAB eig function is outperformed by both the rayleigh and single pass algorithms, as well as the power iteration algorithm.
+
 \epsfig{file=../graph/nonhermetiansparse/eigenvalues.eps}
 
+From these examples, we see that if there is a large gap between the largest eigenvalue, and the second largest eigenvalue in the matrix, the power iteration algorithm converges quite quickly, and is quite a bit faster than the default MATLAB eig function. However, if the ratio between the largest eigenvalue and the second largest eigenvalue is close to one, then the algorithm converges extremely slowly.
 
 \section{Applications and Example}
 
