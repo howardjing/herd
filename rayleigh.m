@@ -2,17 +2,21 @@ function [domLam eigenVec counter] = rayleigh(A, numTimes)
 
     epsilon = 0.001;
     counter = 0;
+    rcondition = rcond(A);
+    
     % call power iteration until convergence is around 1 
     % then the approximation is good enough to start rayleigh iteration
     
     [domLam approx error] = power(A,1,numTimes);
-    while (counter < numTimes) && (error > epsilon)
+    while (counter < numTimes) && (error > epsilon) && (rcondition > 1e-15)
         temp = approx;
         rq = (temp'*A*temp)/(temp'*temp);
         C = (A-rq*eye(size(A)))\approx;
         approx = C/norm(C,2);
         error = norm(temp - approx,2);
         counter = counter + 1;
+        
+        rcondition = rcond(A-rq*eye(size(A)));
     end
 
     eigenVec = approx;

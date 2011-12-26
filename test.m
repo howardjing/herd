@@ -10,11 +10,14 @@ for i=100:100:2000
     disp('Working on')
     i
     
-   
+    
     % Generate a random hermitian matrix
     A = randn(i,i);
     A = (A + A')/2;
-    
+    while cond(A) > 5e4
+        A = randn(i,i);
+        A = (A + A')/2;
+    end
     % find the dominant, and second most dominant eigenvalue
     temp = eig(A);
     eigenValues(1,counter) = temp(length(temp));
@@ -71,23 +74,23 @@ ylabel('Time')
 legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
 
 figure
+plot(100:100:2000, timeMatrix(1,:))
+hold on
+plot(100:100:2000, timeMatrix(2,:), 'r')
+hold on
+semilogy(100:100:2000, timeMatrix(3,:), 'g')
+hold on
+plot(100:100:2000, timeMatrix(4,:), 'm')
+hold on
+plot(100:100:2000, timeMatrix(5,:), 'k')
+title ('Time Elapsed till Convergence')
+xlabel('Matrix Size x by x')
+ylabel('Time')
+legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+
+figure
 plot(100:100:2000, eigenValues)
 title('eigenvalues of the matrix')
 ylabel('eigenvalue')
 xlabel('Matrix Size x by x')
 legend('largest eigenvalue', 'second largest eigenvalue')
-
-figure
-plot(100:100:2000, counterMatrix(2,:), 'r')
-hold on
-plot(100:100:2000, counterMatrix(3,:), 'g')
-hold on
-plot(100:100:2000, counterMatrix(4,:), 'm')
-hold on
-plot(100:100:2000, counterMatrix(5,:), 'k')
-title ('Number of Iterations till Convergence')
-xlabel ('Matrix Size x by x')
-ylabel ('Time')
-legend('Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
-
-
