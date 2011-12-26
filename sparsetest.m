@@ -22,14 +22,11 @@ for i=100:100:2000
     filepath = ['data/' name number ext];
     A = csvread(filepath);
     
-    % make it sparse
-    A = (A + A')/2;
-    
     % find rank
     rank(A)
     
     % find the dominant, and second most dominant eigenvalue
-    temp = eig(A);
+    temp = sort(eig(A));
     eigenValues(1,counter) = temp(length(temp));
     eigenValues(2,counter) = temp(length(temp)-1);
     
@@ -45,11 +42,11 @@ for i=100:100:2000
     [answerMatrix(2,counter) garbage counterMatrix(2,counter)] = powerIteration(A,numTimes);
     timeMatrix(2,counter) = toc(timeStart);
     
-    % InverseIteration
-    timeStart = tic;
-    disp('inverse')
-    [answerMatrix(3,counter) garbage counterMatrix(3,counter)] = inverseIteration(A,numTimes);
-    timeMatrix(3,counter) = toc(timeStart);
+%     % InverseIteration
+%     timeStart = tic;
+%     disp('inverse')
+%     [answerMatrix(3,counter) garbage counterMatrix(3,counter)] = inverseIteration(A,numTimes);
+%     timeMatrix(3,counter) = toc(timeStart);
     
     % Rayleigh
     timeStart = tic;
@@ -73,15 +70,33 @@ semilogy(100:100:2000, timeMatrix(1,:))
 hold on
 semilogy(100:100:2000, timeMatrix(2,:), 'r')
 hold on
-semilogy(100:100:2000, timeMatrix(3,:), 'g')
-hold on
+% semilogy(100:100:2000, timeMatrix(3,:), 'g')
+% hold on
 semilogy(100:100:2000, timeMatrix(4,:), 'm')
 hold on
 semilogy(100:100:2000, timeMatrix(5,:), 'k')
 title ('semilogy Time Elapsed till Convergence')
 xlabel('Matrix Size x by x')
 ylabel('Time')
-legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+%legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Rayleigh','Single Pass')
+
+figure
+% Graphing time and number of iterations
+plot(100:100:2000, timeMatrix(1,:))
+hold on
+plot(100:100:2000, timeMatrix(2,:), 'r')
+hold on
+% plot(100:100:2000, timeMatrix(3,:), 'g')
+% hold on
+plot(100:100:2000, timeMatrix(4,:), 'm')
+hold on
+plot(100:100:2000, timeMatrix(5,:), 'k')
+title ('Time Elapsed till Convergence')
+xlabel('Matrix Size x by x')
+ylabel('Time')
+legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Rayleigh','Single Pass')
+
 
 figure
 plot(100:100:2000, eigenValues)
@@ -93,14 +108,14 @@ legend('largest eigenvalue', 'second largest eigenvalue')
 figure
 plot(100:100:2000, counterMatrix(2,:), 'r')
 hold on
-plot(100:100:2000, counterMatrix(3,:), 'g')
-hold on
+% plot(100:100:2000, counterMatrix(3,:), 'g')
+% hold on
 plot(100:100:2000, counterMatrix(4,:), 'm')
 hold on
 plot(100:100:2000, counterMatrix(5,:), 'k')
 title ('Number of Iterations till Convergence')
 xlabel ('Matrix Size x by x')
 ylabel ('Time')
-legend('Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+legend('Power Iteration','Rayleigh','Single Pass')
 
 

@@ -73,7 +73,7 @@ semilogy(100:100:2000, timeMatrix(1,:))
 hold on
 semilogy(100:100:2000, timeMatrix(2,:), 'r')
 hold on
-semilogy(100:100:2000, timeMatrix(3,:), 'g')
+%semilogy(100:100:2000, timeMatrix(3,:), 'g')
 hold on
 semilogy(100:100:2000, timeMatrix(4,:), 'm')
 hold on
@@ -81,7 +81,7 @@ semilogy(100:100:2000, timeMatrix(5,:), 'k')
 title ('semilogy Time Elapsed till Convergence')
 xlabel('Matrix Size x by x')
 ylabel('Time')
-legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Rayleigh','Single Pass')
 
 % Graphing time and number of iterations
 figure
@@ -89,7 +89,7 @@ plot(100:100:2000, timeMatrix(1,:))
 hold on
 plot(100:100:2000, timeMatrix(2,:), 'r')
 hold on
-plot(100:100:2000, timeMatrix(3,:), 'g')
+%plot(100:100:2000, timeMatrix(3,:), 'g')
 hold on
 plot(100:100:2000, timeMatrix(4,:), 'm')
 hold on
@@ -97,7 +97,7 @@ plot(100:100:2000, timeMatrix(5,:), 'k')
 title ('Time Elapsed till Convergence')
 xlabel('Matrix Size x by x')
 ylabel('Time')
-legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Inverse Iteration','Rayleigh','Single Pass')
+legend('Built-in Matlab Eigenvalue Solver','Power Iteration','Rayleigh','Single Pass')
 
 
 figure

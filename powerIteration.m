@@ -1,7 +1,7 @@
 function [domVal domVec counter] = powerIteration(A, numTimes)
     appx = ones(length(A),1);
     counter = 0;
-    epsilon = 0.001;
+    epsilon = 0.0001;
     error = 100;
     while (counter < numTimes) && (error > epsilon)
         temp = appx;

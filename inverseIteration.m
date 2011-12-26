@@ -1,6 +1,6 @@
 function [domVal domVec counter] = inverseIteration(A, numTimes)
 
-    epsilon = 0.001;
+    epsilon = 0.0001;
     counter = 0;
     rcondition = rcond(A);
     
