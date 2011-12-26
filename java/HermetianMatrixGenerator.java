@@ -6,7 +6,7 @@ public class HermetianMatrixGenerator extends SparseMatrixGenerator{
     // return a hermetian sparse matrix listing the links of each page
     public HermetianMatrixGenerator(int n, double prob) {
         matrix = new int[n][n];
-        this.prob = prob;
+        this.prob = prob/2;
         
         Random rand = new Random();
         for (int i=0; i<n; i++) {
