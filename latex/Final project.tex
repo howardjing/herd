@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{epstopdf}
+\usepackage{epsfig}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Scientific Computing Final Project}
@@ -83,26 +84,26 @@ So the formula is proved. As k increases, the algorithm will converge towards th
 \subsection{Inverse Iteration}
 If an invertible $n\times n$ matrix A has eigenvalues $\lambda_1,...,\lambda_n$ , then its inverse $A^{-1}$ has eigenvalues $\frac{1}{\lambda_1}$,..,$\frac{1}{\lambda_n}$. If we run the power iteration algorithm on the matrix $A^{-1}$, we can then find the smallest eigenvalue $\lambda_n$ of the matrix A. This process can in fact be generalized to find any eigenvalue of the matrix A.
 
-The spectral mapping theorem states that for every $n\times n$ matrix A and every polynomial $p(x)$, if A has an eigenvalue $\lambda_i$, then $p(A)$ has an eigenvalue $p(\lambda_i)$. Then the matrix $B := A - \sigma I$ has eigenvalues of $\{\lambda_1 - \sigma,...,\lambda_n - \sigma\}$. If $\sigma$ is chosen to be very close to the arbitrary eigenvalue $\lambda_i$, then the corresponding eigenvalue $\lambda_i - \sigma$ will be the smallest eigenvalue of the matrix $B$.
+The spectral mapping theorem states that for every $n\times n$ matrix A and every polynomial $p(x)$, if A has an eigenvalue $\lambda_i$, then $p(A)$ has an eigenvalue $p(\lambda_i)$. Then the matrix $B := A - \mu I$ has eigenvalues of $\{\lambda_1 - \mu,...,\lambda_n - \mu\}$. If $\mu$ is chosen to be very close to the arbitrary eigenvalue $\lambda_i$, then the corresponding eigenvalue $\lambda_i - \mu$ will be the smallest eigenvalue of the matrix $B$.
 
 By applying the power iteration algorithm on the matrix $B^{-1}$, we thus arrive at the inverse iteration algorithm: 
 \[
-	x_{k+1} = \frac{(A-\sigma I)^{-1}x_k}{||(A-\sigma I)^{-1}x_k||}
+	x_{k+1} = \frac{(A-\mu I)^{-1}x_k}{||(A-\mu I)^{-1}x_k||}
 \]
-which converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\sigma$. Unlike the power iteration algorithm, which only computes the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm is more flexible as it can be used to compute an arbitrary eigenvalue of the matrix $A$.
+which converges to the eigenvalue of $A$ that is closest to the given estimated eigenvalue $\mu$. Unlike the power iteration algorithm, which only computes the dominant eigenvalue of the matrix $A$, the inverse iteration algorithm is more flexible as it can be used to compute an arbitrary eigenvalue of the matrix $A$.
 
 However the inverse iteration method is more costly than the power iteration method. This is because at each iteration step, either a system of linear equations must be solved, or the inverse matrix must be calculated. This implies that each step of the inverse iteration algorithm costs $O(n^3)$ operations. Similar to the power iteration algorithm, the matrix A must be accessed once at each iteration, for a total of of n times. 
 
 
 
 \subsection{Rayleigh Quotient Iteration (RQI)}
-The Rayleigh quotient iteration method is similar to the inverse iteration method in that it uses improved eigenvector estimates at each iteration to find a good eigenvalue estimate. At each iteration, the Rayleigh quotient is computed to  yield a better eigenvalue estimate at the next step. We calculate the next eigenvector approximation $b_{i+1}$ by :
+The Rayleigh quotient iteration method is similar to the inverse iteration method, but differs in that it uses an improved eigenvector estimate at each iteration to find increasingly good eigenvalue estimates. At each iteration, the Rayleigh quotient is computed to  yield a better eigenvalue estimate for the next step. We calculate the next eigenvector approximation $x_{k+1}$ by :
 \[
-b_{i+1} = \frac{(A-\mu_{i}I)^{-1}b_i}{||(A-\mu_{i}I)^{-1}b_{i}||}
+x_{k+1} = \frac{(A-\mu_{k}I)^{-1}x_k}{||(A-\mu_{k}I)^{-1}x_{k}||}
 \]
-where A is the given matrix, I is the identity matrix and Rayleigh quotient $\mu$ is defined as
+where A is the given matrix, I is the identity matrix and Rayleigh quotient $\mu_k$ is defined as
 \[
-\mu_i = \frac{b^\ast_iAb_i}{b^\ast_ib_i}
+\mu_k = \frac{x^\ast_kAx_k}{x^\ast_kx_k}
 \]
 The convergence of this algorithm known to be cubic. However the initial guess of the eigenvector is very important and hence needs some guidance in order to converge to a global dominant eigenvalue. An inexact Rayleigh quotient iterations caused by an inaccurate initial estimate of the eigenvector associated with the dominant eigenvalue may result in slow or even inaccurate convergence. Thus in our implementation of the algorithm, we kick off the Rayleigh quotient iteration method by the power iteration method then switch to Rayleigh once the eigenvector approximation is guided in the right direction. 
 
@@ -110,6 +111,36 @@ The convergence of this algorithm known to be cubic. However the initial guess o
 
 \section{Single-Pass Algorithm}
 \section{Results and Discussion}
+
+\subsection{Random Normal Hermetian Matrix}
+Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on normally distributed hermetian matrices.
+
+\epsfig{file=../graph/randn/"time elapsed alt".eps}
+
+\epsfig{file=../graph/randn/eigenvalues.eps}
+
+\subsection{Random Uniform Hermetian Matrix}
+Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on uniformly distributed hermetian matrices.
+
+\epsfig{file=../graph/rand/"time elapsed alt".eps}
+
+\epsfig{file=../graph/rand/eigenvalues.eps}
+
+\subsection{Sparse Hermetian Matrix}
+Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on sparse hermetian matrices, with a $10\%$ chance of containing a non-zero value.
+
+\epsfig{file=../graph/hermetiansparse/"time elapsed alt".eps}
+
+\epsfig{file=../graph/hermetiansparse/eigenvalues.eps}
+
+\subsection{Sparse Matrix}
+Results of running the power iteration, inverse iteration, rayleigh iteration, and single pass algorithm on sparse matrices, with a $5\%$ chance of containing a non-zero value.
+
+\epsfig{file=../graph/nonhermetiansparse/"time elapsed alt".eps}
+
+\epsfig{file=../graph/nonhermetiansparse/eigenvalues.eps}
+
+
 \section{Applications and Example}
 
 %\subsection{}
