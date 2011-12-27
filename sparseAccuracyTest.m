@@ -4,13 +4,17 @@ function [answer smallAnswer eigenvalue] = sparseAccuracyTest
     A = csvread('data/hermetiansparse20.csv');
     
     % Uncomment for sparse
-    %A = csvread('data/sparse20.csv');
+    A = csvread('data/sparse20.csv');
     
     % Uncomment for rank 50 2000x2000 hermetian randn matrix
 %     A = makeSingularMatrix(2000,25);
 %     A = (A + A')/2;
 %     rank(A)
-%     
+    
+    % Uncomment for rank 50 (row) 2000x2000 hermetian randn matrix
+    A = makeSingularRowMatrix(2000,25);
+    A = (A + A')/2;
+    rank(A)
     
     % Uncomment for full rank 2000x2000 randn matrix
 %     A = randn(2000,2000);
@@ -59,26 +63,26 @@ function [answer smallAnswer eigenvalue] = sparseAccuracyTest
     scatter(50:50:2000, answer)
     hold on
     plot(50:50:2000, ones(1,length(answer))*eigenvalue, 'k')
-    %plot(50:50:2000, ones(1,length(answer))*secondEigenvalue, 'g--')
+    plot(50:50:2000, ones(1,length(answer))*secondEigenvalue, 'g--')
     hold off
     title ('Estimation of dominant eigenvalue (50 to 2000 samples)')
     xlabel('number of samples')
     ylabel('estimated eigenvalue')
-    %legend('estimated answer','actual answer', 'second largest eigenvalue')
-    legend('estimated answer','actual answer')
+    legend('estimated answer','actual answer', 'second largest eigenvalue')
+    %legend('estimated answer','actual answer')
     
     % plot estimation 1 : 50 samples
     figure
     scatter(1:50, smallAnswer)
     hold on
     plot(1:50, ones(1,length(smallAnswer))*eigenvalue, 'k')
-    %plot(1:50, ones(1,length(smallAnswer))*secondEigenvalue, 'g--')
+    plot(1:50, ones(1,length(smallAnswer))*secondEigenvalue, 'g--')
     hold off
     title ('Estimation of dominant eigenvalue (1 to 50 samples)')
     xlabel('number of samples')
     ylabel('estimated eigenvalue')
-    %legend('estimated answer','actual answer', 'second largest eigenvalue')
-    legend('estimated answer','actual answer')
+    legend('estimated answer','actual answer', 'second largest eigenvalue')
+    %legend('estimated answer','actual answer')
     
     % plot error 50 : 2000 samples
     figure

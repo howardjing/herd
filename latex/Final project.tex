@@ -139,7 +139,7 @@ The above graph shows the results of running the power iteration, rayleigh itera
 \epsfig{file=../graph/randn/eigenvalues.eps, height = 8cm}
 \end{center}
 
-As can be seen, the largest eigenvalue and second largest eigenvalue are very similar in size. This explains the slow convergence of the power iteration algorithm.
+As can be seen, the magnitude of the largest eigenvalue and second largest eigenvalue are very similar in size. This explains the slow convergence of the power iteration algorithm.
 
 \subsection{} \textbf{Random Uniform Hermetian Matrix.}
 
@@ -182,6 +182,47 @@ The above shows the results of running the power iteration, inverse iteration, r
 \end{center}
 
 From these examples, we see that if there is a large gap between the largest eigenvalue, and the second largest eigenvalue in the matrix, the power iteration algorithm converges quite quickly, and is quite a bit faster than the default MATLAB eig function. However, if the ratio between the largest eigenvalue and the second largest eigenvalue is close to one, then the algorithm converges extremely slowly.
+
+\section{Accuracy Results}
+In this section, we test the accuracy of the single pass algorithm by running it on various types of $2000 \times 2000$ matrices while varying the number of samples drawn. The types of matrices tested were an invertible randomly generated and normally distributed hermetian matrix, a rank 50 randomly generated and normally distributed hermetian matrix, a sparse invertible non-hermetian matrix, and a sparse hermetian matrix. 
+
+\subsection{}\textbf{Invertible Normally Distributed Matrix.}
+
+\epsfig{file=../graph/accuracy/invertiblerandomnormal/"estimate50to2000".eps, height = 8cm}
+
+The above graph shows the failure of the single pass algorithm to converge until all 2000 columns have been sampled by the random matrix $\Omega$. Because every column in the randomly generated matrix is linearly independent, all of the columns must be sampled in order to get an accurate approximation of the dominant eigenvalue of the matrix. The following example will show the results on a rank 50 $2000 \times 2000$ matrix.
+
+\subsection{}\textbf{Rank 50 Normally Distributed Matrix.}
+
+\epsfig{file=../graph/accuracy/rank50randomnormal/"estimate1to50".eps, height = 8cm}
+
+The above graph shows the results of the algorithm sampling up to 50 columns from a rank 50 matrix. As can be seen, the results fail to converge to the dominant eigenvalue. However, as the graph below will show, the algorithm begins to converge to either the largest eigenvalue or the second largest eigenvalue once more than fifty columns have been sampled.
+
+\epsfig{file=../graph/accuracy/rank50randomnormal/"estimate50to2000".eps, height = 8cm}
+
+Because the magnitude of the largest and second largest eigenvalues are so close together in a normally distributed matrix, the single-pass algorithm seems to converge either to the largest or the second largest eigenvalue.
+ 
+\epsfig{file=../graph/accuracy/rank50randomnormal/"estimate50to2000alt".eps, height = 8cm}
+
+The above graph shows the results of the single-pass algorithm on another rank 50 $2000 \times 2000$ matrix. However, the algorithm converges to the second largest eigenvalue. It is only until all 2000 columns have been sampled that the correct answer is reached.
+
+\subsection{}\textbf{Hermetian, Invertible, Sparse Matrix.}
+
+Now we test the algorithm on a hermetian, sparse matrix with $95\%$ zero values, and $5\%$ one values. From the previous section, we have seen that the difference in magnitude of the largest and second largest eigenvalues is quite large. As a result, the single-algorithm does not require many samples before returning the correct answer.
+
+\epsfig{file=../graph/accuracy/hermetiansparse/"estimate1to50".eps, height = 8cm}
+
+\epsfig{file=../graph/accuracy/hermetiansparse/"estimate50to2000".eps, height = 8cm}
+
+As can be seen, after around 20 columns are drawn, the results of the single-pass algorithm tend to converge to the correct algorithm.
+
+\subsection{}\textbf{Non-Hermetian, Invertible, Sparse Matrix.}
+
+As stated before, non-hermetian matrices consisting of ones and zeros are particularly useful as they can be used to represent the adjacency matrix of a directed graph. Although the single-pass algorithm that we have implemented is not intended for non-hermetian matrices, the approximation of the dominant eigenvalue is at least on the same order of magnitude as the actual answer.
+
+\epsfig{file=../graph/accuracy/sparse/"estimate1to50".eps, height = 8cm}
+
+\epsfig{file=../graph/accuracy/sparse/"estimate50to2000".eps, height = 8cm}
 
 \section{Applications and Example}
 
