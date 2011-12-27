@@ -8,6 +8,8 @@
 \usepackage{amssymb}
 \usepackage{epstopdf}
 \usepackage{epsfig}
+
+\usepackage{listings}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Scientific Computing Final Project}
@@ -224,9 +226,26 @@ As stated before, non-hermetian matrices consisting of ones and zeros are partic
 
 \epsfig{file=../graph/accuracy/sparse/"estimate50to2000".eps, height = 8cm}
 
-\section{Applications and Example}
+\section{Matlab Code}
 
-%\subsection{}
+\subsection{Power Iteration}
+The following is the code for our implementation of the power iteration algorithm
+\begin{lstlisting}
+function [domVal domVec counter] = powerIteration(A, numTimes)
+    appx = ones(length(A),1);
+    counter = 0;
+    epsilon = 0.0001;
+    error = 100;
+    while (counter < numTimes) && (error > epsilon)
+        temp = appx;
+        appx = A*appx / norm(A*appx, 2);
+        error = norm(temp-appx,2);
+        counter = counter + 1;
+    end
+    domVec = appx;
+    domVal = appx'*A*appx;
+end
+\end{lstlisting}
 
 
 
